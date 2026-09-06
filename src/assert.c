@@ -11,7 +11,9 @@
 #define ANSI_COLOR_CYAN    "\x1b[36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
-void __util_failed_assert(const char *restrict file, const char *restrict func, usize line, const char *restrict fmt, ...) {
+ATTR_FORMAT(5, 6) ATTR_COLD void __util_failed_assert(bool cond, const char *ATTR_RESTRICT file, const char *ATTR_RESTRICT func, usize line, const char *ATTR_RESTRICT fmt, ...) {
+	if (cond) return;
+
 	printf(ANSI_COLOR_RED "Assert failed at '%s' (%s:%zu) -\n      ", file, func, line);
 	
 	va_list args;
@@ -23,7 +25,10 @@ void __util_failed_assert(const char *restrict file, const char *restrict func, 
 	exit(1);
 }
 
-void __util_todo(const char *restrict file, const char *restrict func, usize line) {
+#if defined(UTIL_TODO_ERROR)
+ATTR_NORETURN
+#endif
+ATTR_COLD void __util_todo(const char *ATTR_RESTRICT file, const char *ATTR_RESTRICT func, usize line) {
 #if defined(UTIL_TODO_ERROR)
 	printf(ANSI_COLOR_RED "TODO() ran at '%s' (%s:%zu)\n", file, func, line);
 	exit(1);
@@ -32,7 +37,7 @@ void __util_todo(const char *restrict file, const char *restrict func, usize lin
 #endif
 }
 
-void __util_unreachable(const char *restrict file, const char *restrict func, usize line) {
+ATTR_COLD ATTR_NORETURN void __util_unreachable(const char *ATTR_RESTRICT file, const char *ATTR_RESTRICT func, usize line) {
 	printf(ANSI_COLOR_RED "UNREACHABLE() ran at '%s' (%s:%zu)\n", file, func, line);
 	exit(1);
 }

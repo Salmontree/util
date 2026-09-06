@@ -7,5 +7,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(util C)
 
-add_library(util STATIC src/assert.c)
+add_library(util STATIC
+	src/assert.c
+	src/dynarr.c
+)
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ./include)

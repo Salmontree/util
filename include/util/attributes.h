@@ -61,7 +61,7 @@
 #   define ATTR_FALLTHROUGH
 #   define ATTR_RESTRICT
 #endif
- 
+
 #if defined(LANGUAGE_CPP) && STANDARD_CPP_ORD >= STANDARD_CPP11_ORD
 #   undef ATTR_NORETURN
 #   define ATTR_NORETURN [[noreturn]]
@@ -77,7 +77,8 @@
 #   define ATTR_WARN_UNUSED_RESULT [[nodiscard]]
 #   undef ATTR_FALLTHROUGH
 #   define ATTR_FALLTHROUGH [[fallthrough]]
-#elif defined(LANGUAGE_C) && STANDARD_C_ORD >= STANDARD_C23_ORD
+#elif defined(LANGUAGE_C) && STANDARD_C_ORD >= STANDARD_C23_ORD && \
+	  !defined(COMPILER_GCC) && !defined(COMPILER_CLANG)
 #   undef ATTR_UNUSED
 #   define ATTR_UNUSED [[maybe_unused]]
 #   undef ATTR_WARN_UNUSED_RESULT
@@ -87,13 +88,14 @@
 #endif
  
 #if (defined(LANGUAGE_CPP) && STANDARD_CPP_ORD >= STANDARD_CPP14_ORD) || \
-    (defined(LANGUAGE_C) && STANDARD_C_ORD >= STANDARD_C23_ORD)
+	(defined(LANGUAGE_C) && STANDARD_C_ORD >= STANDARD_C23_ORD && \
+	 !defined(COMPILER_GCC) && !defined(COMPILER_CLANG))
 #   undef ATTR_DEPRECATED
 #   define ATTR_DEPRECATED(msg) [[deprecated(msg)]]
 #endif
  
 #if (defined(LANGUAGE_CPP) && STANDARD_CPP_ORD >= STANDARD_CPP11_ORD) || \
-    (defined(LANGUAGE_C) && STANDARD_C_ORD >= STANDARD_C11_ORD)
+	(defined(LANGUAGE_C) && STANDARD_C_ORD >= STANDARD_C11_ORD)
 #   undef ATTR_ALIGNED
 #   define ATTR_ALIGNED(n) alignas(n)
 #endif
@@ -101,6 +103,15 @@
 #if defined(LANGUAGE_C) && STANDARD_C_ORD >= STANDARD_C99_ORD
 #   undef ATTR_RESTRICT
 #   define ATTR_RESTRICT restrict
+#endif
+ 
+#if (defined(LANGUAGE_C) && STANDARD_C_ORD >= STANDARD_C99_ORD) || \
+	(defined(LANGUAGE_CPP) && STANDARD_CPP_ORD >= STANDARD_CPP11_ORD)
+#   if defined(COMPILER_CLANG) || defined(COMPILER_GCC)
+#       define ATTR_NON_NULL_ARGS(...) __attribute__((nonnull(__VA_ARGS__)))
+#   else
+#       define ATTR_NON_NULL_ARGS(...)
+#   endif
 #endif
 
 #endif // #ifndef __UTIL_ATTRIBUTES_H__
