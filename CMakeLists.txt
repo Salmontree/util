@@ -11,4 +11,4 @@ add_library(util STATIC
 	src/assert.c
 	src/dynarr.c
 )
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ./include)
+target_include_directories(${PROJECT_NAME} PUBLIC ./include)
