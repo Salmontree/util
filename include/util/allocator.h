@@ -16,6 +16,8 @@ typedef struct {
 } alloc_t;
 
 #define ALLOC(allocator, size) (allocator)->vtable.alloc((allocator)->state, (size))
+#define ALLOC_NEW(allocator, type) ALLOC((allocator), sizeof(type))
+#define ALLOC_ARRAY(allocator, type, len) ALLOC((allocator), sizeof(type) * (len))
 #define ALLOC_REALLOC(allocator, data, new_len) (allocator)->vtable.realloc((allocator)->state, (data), (new_len))
 #define ALLOC_FREE(allocator, data) (allocator)->vtable.free((allocator)->state, (data))
 #define ALLOC_FREEALL(allocator) (allocator)->vtable.freeall((allocator)->state)
