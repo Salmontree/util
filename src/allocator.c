@@ -10,7 +10,7 @@ ATTR_WARN_UNUSED_RESULT ATTR_MALLOC void* c_alloc(void* state, usize size) {
 	ASSERT_NOT_NULL(data, "Malloc call failed");
 	return data;
 }
-ATTR_WARN_UNUSED_RESULT ATTR_MALLOC void* c_realloc(void* state, ATTR_NON_NULL void* data, usize new_size) {
+ATTR_WARN_UNUSED_RESULT ATTR_MALLOC void* c_realloc(void* state, void* data, usize new_size) {
 	ASSERT_NULL(state, "Invalid C allocator 'realloc' call");
 	ASSERT_NOT_NULL(data, "Invalid C allocator 'realloc' call (data cannot be NULL)");
 	ASSERT(new_size > 0, "Invalid C allocator 'realloc' call (new_size cannot be zero)");
@@ -18,7 +18,7 @@ ATTR_WARN_UNUSED_RESULT ATTR_MALLOC void* c_realloc(void* state, ATTR_NON_NULL v
 	ASSERT_NOT_NULL(new_data, "Realloc call failed");
 	return new_data;
 }
-void c_free(void* state, ATTR_NON_NULL void* data) {
+void c_free(void* state, void* data) {
 	ASSERT_NULL(state, "Invalid C allocator 'free' call");
 	ASSERT_NOT_NULL(data, "Invalid C allocator 'free' call (data cannot be NULL)");
 	free(data);

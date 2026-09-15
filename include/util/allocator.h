@@ -7,8 +7,8 @@
 typedef struct {
 	struct {
 		ATTR_WARN_UNUSED_RESULT void* (*alloc)(void* state, usize size);
-		ATTR_WARN_UNUSED_RESULT void* (*realloc)(void* state, ATTR_NON_NULL void* data, usize new_size);
-		void  (*free)(void* state, ATTR_NON_NULL void* data);
+		ATTR_WARN_UNUSED_RESULT void* (*realloc)(void* state, void* data, usize new_size);
+		void  (*free)(void* state, void* data);
 		void  (*freeall)(void* state);
 		void  (*destroy)(void* state);
 	} vtable;
