@@ -19,7 +19,7 @@ typedef struct {
 #define ALLOC_REALLOC(allocator, data, new_len) (allocator)->vtable.realloc((allocator)->state, (data), (new_len))
 #define ALLOC_FREE(allocator, data) (allocator)->vtable.free((allocator->state, (data))
 #define ALLOC_FREEALL(allocator) (allocator)->vtable.freeall((allocator)->state)
-#define ALLOC_DESTROY(allocator) do { (allocator)->vtable.destroy((allocator)->state); (allocator)->state = (void*)0; (allocator)->vtable = {0}; } while(0)
+#define ALLOC_DESTROY(allocator) do { (allocator)->vtable.destroy((allocator)->state); (allocator)->state = (void*)0; } while(0)
 
 ATTR_WARN_UNUSED_RESULT ATTR_NON_NULL ATTR_COLD alloc_t c_alloc_new(void);
 ATTR_WARN_UNUSED_RESULT ATTR_NON_NULL ATTR_COLD alloc_t arena_fixed_alloc_new(void);
