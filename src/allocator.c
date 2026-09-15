@@ -24,10 +24,10 @@ void c_free(void* state, void* data) {
 	free(data);
 }
 void c_freeall(ATTR_UNUSED void* state) {
-	UNREACHABLE();
+	// UNREACHABLE();
 }
 void c_destroy(ATTR_UNUSED void* state) {
-	UNREACHABLE();
+	// UNREACHABLE();
 }
 ATTR_NON_NULL ATTR_COLD alloc_t c_alloc_new(void) {
 	return (alloc_t) {
