@@ -5,6 +5,7 @@ set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 add_library(util STATIC
+	src/allocator.c
 	src/assert.c
 	src/dynarr.c
 )
