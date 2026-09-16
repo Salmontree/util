@@ -1,11 +1,11 @@
-#include <stdlib.h>
 #include <string.h>
 #include <util/dynarr.h>
 
-ATTR_WARN_UNUSED_RESULT ATTR_MALLOC void* __util_dynarr_new(usize elem_size) {
-	dynarr_header_t* header = (dynarr_header_t*)malloc(__UTIL_DYNARR_HEADER_SIZE + __UTIL_DYNARR_INITIAL_CAP * elem_size);
+ATTR_WARN_UNUSED_RESULT ATTR_MALLOC void* __util_dynarr_new(alloc_t allocator, usize elem_size) {
+	dynarr_header_t* header = (dynarr_header_t*)ALLOC(allocator, __UTIL_DYNARR_HEADER_SIZE + __UTIL_DYNARR_INITIAL_CAP * elem_size);
 	if (header == NULL) return NULL;
 
+	header->alloc = allocator;
 	header->len = 0; header->cap = __UTIL_DYNARR_INITIAL_CAP;
 	header->elem_size = elem_size;
 
@@ -14,7 +14,8 @@ ATTR_WARN_UNUSED_RESULT ATTR_MALLOC void* __util_dynarr_new(usize elem_size) {
 
 ATTR_NON_NULL void __util_dynarr_free_ip(void** arr_ptr) {
 	if (*arr_ptr == NULL) return;
-	free((void*)__UTIL_DYNARR_HEADER(*arr_ptr));
+	dynarr_header_t* header = __UTIL_DYNARR_HEADER(*arr_ptr);
+	ALLOC_FREE(header->alloc, (void*)header);
 	*arr_ptr = NULL;
 }
 
@@ -28,7 +29,7 @@ ATTR_NON_NULL int __util_dynarr_reserve_ip(void** arr_ptr, usize min_cap) {
 	new_cap = header->cap != 0 ? header->cap : 1;
 	while (new_cap < min_cap) new_cap *= 2;
  
-	new_header = (dynarr_header_t*)realloc((void*)header, __UTIL_DYNARR_HEADER_SIZE + new_cap * header->elem_size);
+	new_header = (dynarr_header_t*)ALLOC_REALLOC(header->alloc, (void*)header, __UTIL_DYNARR_HEADER_SIZE + new_cap * header->elem_size);
 	if (new_header == NULL) return 0;
  
 	new_header->cap = new_cap;
@@ -44,7 +45,7 @@ ATTR_NON_NULL ATTR_WARN_UNUSED_RESULT int __util_dynarr_shrink_to_fit_ip(void** 
 		return 1;
 	}
 
-	new_header = (dynarr_header_t*)realloc((void*)header, __UTIL_DYNARR_HEADER_SIZE + header->len * header->elem_size);
+	new_header = (dynarr_header_t*)ALLOC_REALLOC(header->alloc, (void*)header, __UTIL_DYNARR_HEADER_SIZE + header->len * header->elem_size);
 	if (new_header == NULL) return 0;
 
 	new_header->cap = new_header->len;

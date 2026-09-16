@@ -4,11 +4,13 @@
 #include "util/attributes.h"
 #include "util/types.h"
 #include "util/assert.h" // IWYU pragma: keep
+#include "util/allocator.h"
 #include <stdio.h> // IWYU pragma: keep
 
 #define ARRLEN(arr) (sizeof(arr) / sizeof(*(arr)))
 
 typedef struct {
+	alloc_t alloc;
 	usize len, cap;
 	usize elem_size;
 } dynarr_header_t;
@@ -24,7 +26,7 @@ union __util_dynarr_align_u {
 #define __UTIL_DYNARR_HEADER(v) ((dynarr_header_t*)((char*)(v) - __UTIL_DYNARR_HEADER_SIZE))
 #define __UTIL_DYNARR_INITIAL_CAP ((usize)4)
 
-ATTR_MALLOC ATTR_WARN_UNUSED_RESULT void* __util_dynarr_new(usize elem_size);
+ATTR_WARN_UNUSED_RESULT void* __util_dynarr_new(alloc_t allocator, usize elem_size);
 ATTR_NON_NULL void  __util_dynarr_free_ip(void** arr_ptr);
 ATTR_NON_NULL int   __util_dynarr_reserve_ip(void** arr_ptr, usize min_cap);
 ATTR_NON_NULL ATTR_WARN_UNUSED_RESULT int __util_dynarr_shrink_to_fit_ip(void** arr_ptr);
@@ -35,7 +37,7 @@ ATTR_NON_NULL usize __util_dynarr_index_of(const void* arr, const void* elem);
 
 #define DYNARR(t) t*
 
-#define DYNARR_NEW(t) ((DYNARR(t))__util_dynarr_new(sizeof(t)))
+#define DYNARR_NEW(allocator, t) ((DYNARR(t))__util_dynarr_new((allocator), sizeof(t)))
 #define DYNARR_FREE(v) __util_dynarr_free_ip((void**)&(v))
 #define DYNARR_CLEAR(v) (__UTIL_DYNARR_HEADER(v)->len = 0)
 #define DYNARR_AT(v, i) ( ASSERT((usize)(i) < __UTIL_DYNARR_HEADER(v)->len, "Dynamic Array access out-of-bounds: index %zu, len %zu", (usize)(i), __UTIL_DYNARR_HEADER(v)->len), (v)[i] )
