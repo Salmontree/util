@@ -42,14 +42,14 @@ ATTR_NON_NULL ATTR_COLD alloc_t c_alloc_new(void) {
 	};
 }
 
-ATTR_NON_NULL ATTR_COLD alloc_t arena_fixed_alloc_new(void) {
-
-}
-
-ATTR_NON_NULL ATTR_COLD alloc_t arena_growable_alloc_new(void) {
-
-}
-
-ATTR_NON_NULL ATTR_COLD alloc_t stack_alloc_new(void) {
-
-}
+// ATTR_NON_NULL ATTR_COLD alloc_t arena_fixed_alloc_new(void) {
+//
+// }
+//
+// ATTR_NON_NULL ATTR_COLD alloc_t arena_growable_alloc_new(void) {
+//
+// }
+//
+// ATTR_NON_NULL ATTR_COLD alloc_t stack_alloc_new(void) {
+//
+// }
